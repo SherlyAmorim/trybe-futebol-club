@@ -25,9 +25,9 @@ describe('Teams teste', function() {
   })
 
   it('Get Teams/id Route', async function () {
-    sinon.stub(Teams, 'findOne').resolves(team as any);
+    sinon.stub(Teams, 'findByPk').resolves(team as any);
 
-    const {status, body} = await chai.request(app).get('/teams/:id');
+    const {status, body} = await chai.request(app).get('/teams/1');
 
     expect(status).to.equal(200);
     expect(body).to.deep.equal(team);
