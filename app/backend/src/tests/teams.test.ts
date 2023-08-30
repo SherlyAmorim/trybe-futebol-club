@@ -6,7 +6,7 @@ import chaiHttp = require('chai-http');
 
 import { App } from '../app';
 import Teams from '../database/models/TeamsSequelize';
-import { teams } from './mocks/Teams.mocks';
+import { team, teams } from './mocks/Teams.mocks';
 
 chai.use(chaiHttp);
 
@@ -23,4 +23,14 @@ describe('Teams teste', function() {
     expect(status).to.equal(200);
     expect(body).to.deep.equal(teams);
   })
+
+  it('Get Teams/id Route', async function () {
+    sinon.stub(Teams, 'findOne').resolves(team as any);
+
+    const {status, body} = await chai.request(app).get('/teams/:id');
+
+    expect(status).to.equal(200);
+    expect(body).to.deep.equal(team);
+  })
+
 });
