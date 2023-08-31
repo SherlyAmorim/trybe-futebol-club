@@ -9,13 +9,21 @@ export default class TeamsService {
   ) { }
 
   public async getAllTeams(): Promise<ServiceResponse<ITeam[]>> {
-    const modelData = await this.teamsModel.findAll();
-    return { status: 'SUCCESSFUL', data: modelData };
+    try {
+      const modelData = await this.teamsModel.findAll();
+      return { status: 'SUCCESSFUL', data: modelData };
+    } catch (error) {
+      return { status: 'INTERNAL_SERVER_ERROR', data: { message: (error as Error).message } };
+    }
   }
 
-  public async getTeamById(id: number): Promise<ServiceResponse<ITeam>> {
-    const modelData = await this.teamsModel.findOne(id);
-    if (!modelData) return { status: 'NOT_FOUND', data: { message: `Team ${id} not found` } };
-    return { status: 'SUCCESSFUL', data: modelData };
+  public async getTeamById(id: ITeam['id']): Promise<ServiceResponse<ITeam>> {
+    try {
+      const modelData = await this.teamsModel.findOne(id);
+      if (!modelData) return { status: 'NOT_FOUND', data: { message: `Team ${id} not found` } };
+      return { status: 'SUCCESSFUL', data: modelData };
+    } catch (error) {
+      return { status: 'INTERNAL_SERVER_ERROR', data: { message: (error as Error).message } };
+    }
   }
 }
