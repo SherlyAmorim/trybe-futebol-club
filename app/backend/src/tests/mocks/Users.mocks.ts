@@ -9,10 +9,10 @@ const rash = {
 };
 
 const token = {
-  token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImlhdCI6MTY5MzQ0NzU0MiwiZXhwIjoxNjk0NzQzNTQyfQ.FISwHzZeenG0vNZ-YQI70A0C4UNgH1BjiqFwpUm100Y"
+  token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImlhdCI6MTY5MzUzMDgwNiwiZXhwIjoxNjk0ODI2ODA2fQ.eyzg115v3nvZOGROVVHxxRxy7f29SEmFsSIse0NBXyk"
 }
 
-const validLoginBody = { email: 'admin@admin.com', password: 'secret_admin' };
+const validLoginBody = [{ email: 'admin@admin.com', password: 'secret_admin' }];
 const noPasswordLoginBody = { email: 'admin@admin.com' };
 const noEmailLoginBody = { password: 'secret_admin' };
 
