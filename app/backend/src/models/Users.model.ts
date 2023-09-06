@@ -11,4 +11,11 @@ export default class UsersModel implements IUserModel {
     const { id, username, password } = dbData;
     return { id, username, password, email };
   }
+
+  async getRole(email: string): Promise<IUser['role'] | null> {
+    const dbData = await this.model.findOne({ where: { email } });
+    if (!dbData) return null;
+    const { role } = dbData;
+    return role;
+  }
 }

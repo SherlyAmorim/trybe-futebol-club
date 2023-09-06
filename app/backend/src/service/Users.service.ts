@@ -22,4 +22,10 @@ export default class UsersService {
     const token = JWT.sign({ email: data.email });
     return { status: 'SUCCESSFUL', data: { token } };
   }
+
+  public async getRole(email: string)
+    : Promise<ServiceResponse<object | null>> {
+    const modelData = await this.usersModel.getRole(email);
+    return { status: 'SUCCESSFUL', data: { role: modelData } };
+  }
 }
