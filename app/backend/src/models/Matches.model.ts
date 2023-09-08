@@ -26,4 +26,9 @@ export default class MatchesModel implements IMatcheModel {
     });
     return dbData;
   }
+
+  async updateMatchesEnding(id: IMatche['id']): Promise<number> {
+    const dbData = await this.model.update({ inProgress: false }, { where: { id } });
+    return dbData[0];
+  }
 }

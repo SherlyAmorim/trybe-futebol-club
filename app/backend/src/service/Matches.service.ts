@@ -1,6 +1,6 @@
 import { IMatche } from '../Interfaces/Matches/IMatche';
 import { IMatcheModel } from '../Interfaces/Matches/IMatcheModel';
-import { ServiceResponse } from '../Interfaces/ServiceResponse';
+import { ServiceMessage, ServiceResponse } from '../Interfaces/ServiceResponse';
 import MatchesModel from '../models/Matches.model';
 
 export default class MatchesService {
@@ -23,5 +23,13 @@ export default class MatchesService {
     } catch (error) {
       return { status: 'INTERNAL_SERVER_ERROR', data: { message: (error as Error).message } };
     }
+  }
+
+  public async updateMatchesEnding(id: IMatche['id']): Promise<ServiceResponse<ServiceMessage>> {
+    const modelData = await this.matchesModel.updateMatchesEnding(id);
+    if (modelData === 0) {
+      return { status: 'CONFLICT', data: { message: 'Id not found or match already finished' } };
+    }
+    return { status: 'SUCCESSFUL', data: { message: 'Finished' } };
   }
 }
