@@ -32,4 +32,13 @@ export default class MatchesService {
     }
     return { status: 'SUCCESSFUL', data: { message: 'Finished' } };
   }
+
+  public async updateMatchesInProgress(id: IMatche['id'], data: IMatche)
+    : Promise<ServiceResponse<IMatche>> {
+    const modelData = await this.matchesModel.updateMatchesInProgress(id, data);
+    if (modelData === 0) {
+      return { status: 'CONFLICT', data: { message: 'Id not found or goals already updated' } };
+    }
+    return { status: 'SUCCESSFUL', data };
+  }
 }
