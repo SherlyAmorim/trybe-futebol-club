@@ -41,4 +41,10 @@ export default class MatchesService {
     }
     return { status: 'SUCCESSFUL', data };
   }
+
+  public async createMatches(data: IMatche)
+    : Promise<ServiceResponse<IMatche>> {
+    const modelData = await this.matchesModel.createMatches(data);
+    return { status: 'CREATED', data: modelData };
+  }
 }

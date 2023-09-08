@@ -29,4 +29,9 @@ export default class MatchesController {
     );
     return res.status(mapStatus(serviceData.status)).json(serviceData.data);
   }
+
+  public async createMatches(req: Request, res: Response): Promise<Response> {
+    const serviceData = await this.matchesService.createMatches(req.body);
+    return res.status(mapStatus(serviceData.status)).json(serviceData.data);
+  }
 }

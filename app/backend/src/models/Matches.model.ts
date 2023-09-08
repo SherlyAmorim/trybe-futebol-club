@@ -39,4 +39,15 @@ export default class MatchesModel implements IMatcheModel {
     );
     return dbData[0];
   }
+
+  async createMatches(data: IMatche): Promise<IMatche> {
+    const dbData = await this.model.create({
+      homeTeamId: data.homeTeamId,
+      homeTeamGoals: data.homeTeamGoals,
+      awayTeamId: data.awayTeamId,
+      awayTeamGoals: data.awayTeamGoals,
+      inProgress: true,
+    });
+    return dbData;
+  }
 }
