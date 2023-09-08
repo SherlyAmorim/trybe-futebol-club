@@ -15,4 +15,15 @@ export default class MatchesModel implements IMatcheModel {
     });
     return dbData;
   }
+
+  async getTeamsInProgress(inProgress: IMatche['inProgress']): Promise<IMatche[]> {
+    const dbData = await this.model.findAll({
+      where: { inProgress },
+      include: [
+        { model: Teams, as: 'homeTeam', attributes: { exclude: ['id'] } },
+        { model: Teams, as: 'awayTeam', attributes: { exclude: ['id'] } },
+      ],
+    });
+    return dbData;
+  }
 }

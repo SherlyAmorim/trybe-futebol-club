@@ -8,9 +8,17 @@ export default class MatchesService {
     private matchesModel: IMatcheModel = new MatchesModel(),
   ) { }
 
-  public async getAllTeams(): Promise<ServiceResponse<IMatche[]>> {
+  public async getAllTeams(inProgress: string): Promise<ServiceResponse<IMatche[]>> {
     try {
-      const modelData = await this.matchesModel.getAllTeams();
+      let modelData;
+
+      if (inProgress === 'true') {
+        modelData = await this.matchesModel.getTeamsInProgress(true);
+      } else if (inProgress === 'false') {
+        modelData = await this.matchesModel.getTeamsInProgress(false);
+      } else {
+        modelData = await this.matchesModel.getAllTeams();
+      }
       return { status: 'SUCCESSFUL', data: modelData };
     } catch (error) {
       return { status: 'INTERNAL_SERVER_ERROR', data: { message: (error as Error).message } };

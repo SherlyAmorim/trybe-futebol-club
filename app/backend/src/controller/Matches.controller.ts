@@ -7,8 +7,9 @@ export default class MatchesController {
     private matchesService = new MatchesService(),
   ) { }
 
-  public async getAllMatches(_req: Request, res: Response) {
-    const serviceData = await this.matchesService.getAllTeams();
+  public async getAllMatches(req: Request, res: Response) {
+    const { inProgress } = req.query;
+    const serviceData = await this.matchesService.getAllTeams(inProgress as string);
     return res.status(mapStatus(serviceData.status)).json(serviceData.data);
   }
 }
