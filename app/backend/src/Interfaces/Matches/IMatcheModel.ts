@@ -6,4 +6,6 @@ export interface IMatcheModel {
   updateMatchesEnding(id: IMatche['id']): Promise<number>,
   updateMatchesInProgress(id: IMatche['id'], data: IMatche): Promise<number>,
   createMatches(data: IMatche): Promise<IMatche>,
+  verifyIdsTeams(homeTeamId: IMatche['homeTeamId'], awayTeamId: IMatche['awayTeamId'])
+  : Promise<object | null>,
 }

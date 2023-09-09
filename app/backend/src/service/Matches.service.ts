@@ -44,6 +44,10 @@ export default class MatchesService {
 
   public async createMatches(data: IMatche)
     : Promise<ServiceResponse<IMatche>> {
+    const verifyIdsTeams = await this.matchesModel.verifyIdsTeams(data.homeTeamId, data.awayTeamId);
+    if (verifyIdsTeams === null) {
+      return { status: 'NOT_FOUND', data: { message: 'There is no team with such id!' } };
+    }
     const modelData = await this.matchesModel.createMatches(data);
     return { status: 'CREATED', data: modelData };
   }

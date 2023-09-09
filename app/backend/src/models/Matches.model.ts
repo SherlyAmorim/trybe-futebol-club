@@ -5,6 +5,7 @@ import Teams from '../database/models/TeamsSequelize';
 
 export default class MatchesModel implements IMatcheModel {
   private model = MatchesSequelize;
+  private teams = Teams;
 
   async getAllTeams(): Promise<IMatche[]> {
     const dbData = await this.model.findAll({
@@ -38,6 +39,14 @@ export default class MatchesModel implements IMatcheModel {
       { where: { id } },
     );
     return dbData[0];
+  }
+
+  async verifyIdsTeams(homeTeamId: IMatche['homeTeamId'], awayTeamId: IMatche['awayTeamId'])
+    : Promise<object | null> {
+    const dbDataHome = await this.teams.findByPk(homeTeamId);
+    const dbDataAway = await this.teams.findByPk(awayTeamId);
+    if (dbDataHome && dbDataAway) return { homeTeamId: dbDataHome.id, awayTeamId: dbDataAway.id };
+    return null;
   }
 
   async createMatches(data: IMatche): Promise<IMatche> {
