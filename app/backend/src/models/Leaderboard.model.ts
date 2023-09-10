@@ -1,12 +1,12 @@
 import Teams from '../database/models/TeamsSequelize';
 import { ILeaderboardModel } from '../Interfaces/Leaderboards/ILeaderboardModel';
 import Matches from '../database/models/MatchesSequelize';
-import { ITeam } from '../Interfaces/Teams/ITeam';
+import { IMatchesTeams } from '../Interfaces/Leaderboards/IMatchesTeams';
 
 export default class LeaderboardModel implements ILeaderboardModel {
   private teams = Teams;
 
-  async getTeamsHome(): Promise<ITeam[]> {
+  async getTeamsHome(): Promise<IMatchesTeams[]> {
     const dbMatches = await this.teams.findAll({
       attributes: ['teamName'],
       include: [

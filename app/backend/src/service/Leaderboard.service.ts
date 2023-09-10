@@ -21,27 +21,45 @@ export default class LeaderboardService {
     efficiency: 0,
   };
 
-  static calculateAll(data: IMatchesTeams[]): ILeaderboard[] {
-    const calculateArray: ILeaderboard[] = data.map((dataItem) => {
-      const calc = { ...LeaderboardService.learderboard };
-      calc.name = dataItem.teamName;
-      calc.totalGames = dataItem.homeMatch.length;
-      calc.totalVictories = dataItem.homeMatch
-        .filter((match) => match.homeTeamGoals > match.awayTeamGoals).length;
-      calc.totalDraws = dataItem.homeMatch
-        .filter((match) => match.homeTeamGoals === match.awayTeamGoals).length;
-      calc.totalLosses = calc.totalGames - calc.totalVictories - calc.totalDraws;
-      calc.goalsFavor = dataItem.homeMatch.reduce((total, match) => total + match.homeTeamGoals, 0);
-      calc.goalsOwn = dataItem.homeMatch.reduce((total, match) => total + match.awayTeamGoals, 0);
-      calc.totalPoints = calc.totalVictories * 3 + calc.totalDraws;
-      calc.goalsBalance = calc.goalsFavor - calc.goalsOwn;
-      calc.efficiency = calc.totalGames
-        ? (calc.totalPoints / (calc.totalGames * 3)) * 100 : 0;
+  static calculateAll(datas: IMatchesTeams[]): ILeaderboard[] {
+    const calculateArray: ILeaderboard[] = datas.map((data) => {
+      const c = { ...LeaderboardService.learderboard };
+      if (data.homeMatch) {
+        c.name = data.teamName;
+        c.totalGames = data.homeMatch.length;
+        c.totalVictories = data.homeMatch.filter((m) => m.homeTeamGoals > m.awayTeamGoals).length;
+        c.totalDraws = data.homeMatch.filter((m) => m.homeTeamGoals === m.awayTeamGoals).length;
+        c.totalLosses = c.totalGames - c.totalVictories - c.totalDraws;
+        c.goalsFavor = data.homeMatch.reduce((t, m) => t + m.homeTeamGoals, 0);
+        c.goalsOwn = data.homeMatch.reduce((t, m) => t + m.awayTeamGoals, 0);
+        c.totalPoints = c.totalVictories * 3 + c.totalDraws;
+        c.goalsBalance = c.goalsFavor - c.goalsOwn;
+        c.efficiency = Number((c.totalGames ? (c.totalPoints / (c.totalGames * 3)) * 100 : 0)
+          .toFixed(2));
+      }
+      return c;
+    });
+    return calculateArray;
+  }
 
-      return calc;
+  static orderClassific(homeMatch: ILeaderboard[]): ILeaderboard[] {
+    if (!homeMatch || homeMatch.length === 0) return [];
+
+    const sortClassific = [...homeMatch];
+
+    sortClassific.sort((a, b) => {
+      if (a.totalPoints !== b.totalPoints) return b.totalPoints - a.totalPoints;
+
+      const goalDifferA = a.goalsFavor - a.goalsOwn;
+      const goalDifferB = b.goalsFavor - b.goalsOwn;
+      if (goalDifferA !== goalDifferB) return goalDifferB - goalDifferA;
+
+      if (a.goalsFavor !== b.goalsFavor) return b.goalsFavor - a.goalsFavor;
+
+      return 0;
     });
 
-    return calculateArray;
+    return sortClassific;
   }
 
   public async getTeamsHome(): Promise<ServiceResponse<ILeaderboard[]>> {
@@ -49,10 +67,13 @@ export default class LeaderboardService {
 
     const teamData: IMatchesTeams[] = modelData.map((team) => ({
       teamName: team.teamName,
-      homeMatch: [],
+      homeMatch: team.homeMatch ? [...team.homeMatch] : [],
     }));
 
     const dataFinal = LeaderboardService.calculateAll(teamData);
-    return { status: 'SUCCESSFUL', data: dataFinal };
+
+    const sortedData = LeaderboardService.orderClassific(dataFinal);
+
+    return { status: 'SUCCESSFUL', data: sortedData };
   }
 }
