@@ -8,8 +8,8 @@ export default class TokenValidation {
     return bearerToken.split(' ')[1] || bearerToken;
   }
 
-  static async validateToken(req: Request, res: Response, next: NextFunction)
-    : Promise<Response | void> {
+  static validateToken(req: Request, res: Response, next: NextFunction)
+    : Response | void {
     const bearerToken = req.header('Authorization');
     const token = TokenValidation.extractToken(String(bearerToken));
 
