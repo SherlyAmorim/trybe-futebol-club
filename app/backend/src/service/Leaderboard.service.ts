@@ -1,5 +1,5 @@
 import { ILeaderboard } from '../Interfaces/Leaderboards/ILeaderboard';
-import { IMatchesTeams } from '../Interfaces/Leaderboards/IMatchesTeams';
+import { IMatchesAway, IMatchesHome } from '../Interfaces/Leaderboards/IMatchesTeams';
 import { ServiceResponse } from '../Interfaces/ServiceResponse';
 import LeaderboardModel from '../models/Leaderboard.model';
 import GamesStatistics from '../utils/GamesStatistics';
@@ -12,12 +12,27 @@ export default class LeaderboardService {
   public async getTeamsHome(): Promise<ServiceResponse<ILeaderboard[]>> {
     const modelData = await this.leaderboardModel.getTeamsHome();
 
-    const teamData: IMatchesTeams[] = modelData.map((team) => ({
+    const teamData: IMatchesHome[] = modelData.map((team) => ({
       teamName: team.teamName,
       homeMatch: team.homeMatch ? [...team.homeMatch] : [],
     }));
 
     const dataFinal = GamesStatistics.calculateMatchesHome(teamData);
+
+    const sortedData = GamesStatistics.orderClassific(dataFinal);
+
+    return { status: 'SUCCESSFUL', data: sortedData };
+  }
+
+  public async getTeamsAway(): Promise<ServiceResponse<ILeaderboard[]>> {
+    const modelData = await this.leaderboardModel.getTeamsAway();
+
+    const teamData: IMatchesAway[] = modelData.map((team) => ({
+      teamName: team.teamName,
+      awayMatch: team.awayMatch ? [...team.awayMatch] : [],
+    }));
+
+    const dataFinal = GamesStatistics.calculateMatchesAway(teamData);
 
     const sortedData = GamesStatistics.orderClassific(dataFinal);
 

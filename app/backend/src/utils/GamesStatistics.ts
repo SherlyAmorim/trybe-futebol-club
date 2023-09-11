@@ -1,5 +1,5 @@
 import { ILeaderboard } from '../Interfaces/Leaderboards/ILeaderboard';
-import { IMatchesTeams } from '../Interfaces/Leaderboards/IMatchesTeams';
+import { IMatchesAway, IMatchesHome } from '../Interfaces/Leaderboards/IMatchesTeams';
 
 export default class GamesStatistics {
   static learderboard = {
@@ -15,7 +15,7 @@ export default class GamesStatistics {
     efficiency: 0,
   };
 
-  static calculateMatchesHome(datas: IMatchesTeams[]): ILeaderboard[] {
+  static calculateMatchesHome(datas: IMatchesHome[]): ILeaderboard[] {
     const calculateArray: ILeaderboard[] = datas.map((data) => {
       const c = { ...GamesStatistics.learderboard };
       if (data.homeMatch) {
@@ -26,6 +26,27 @@ export default class GamesStatistics {
         c.totalLosses = c.totalGames - c.totalVictories - c.totalDraws;
         c.goalsFavor = data.homeMatch.reduce((t, m) => t + m.homeTeamGoals, 0);
         c.goalsOwn = data.homeMatch.reduce((t, m) => t + m.awayTeamGoals, 0);
+        c.totalPoints = c.totalVictories * 3 + c.totalDraws;
+        c.goalsBalance = c.goalsFavor - c.goalsOwn;
+        c.efficiency = Number((c.totalGames ? (c.totalPoints / (c.totalGames * 3)) * 100 : 0)
+          .toFixed(2));
+      }
+      return c;
+    });
+    return calculateArray;
+  }
+
+  static calculateMatchesAway(datas: IMatchesAway[]): ILeaderboard[] {
+    const calculateArray: ILeaderboard[] = datas.map((data) => {
+      const c = { ...GamesStatistics.learderboard };
+      if (data.awayMatch) {
+        c.name = data.teamName;
+        c.totalGames = data.awayMatch.length;
+        c.totalVictories = data.awayMatch.filter((m) => m.awayTeamGoals > m.homeTeamGoals).length;
+        c.totalDraws = data.awayMatch.filter((m) => m.awayTeamGoals === m.homeTeamGoals).length;
+        c.totalLosses = c.totalGames - c.totalVictories - c.totalDraws;
+        c.goalsFavor = data.awayMatch.reduce((t, m) => t + m.awayTeamGoals, 0);
+        c.goalsOwn = data.awayMatch.reduce((t, m) => t + m.homeTeamGoals, 0);
         c.totalPoints = c.totalVictories * 3 + c.totalDraws;
         c.goalsBalance = c.goalsFavor - c.goalsOwn;
         c.efficiency = Number((c.totalGames ? (c.totalPoints / (c.totalGames * 3)) * 100 : 0)
