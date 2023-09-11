@@ -57,6 +57,32 @@ export default class GamesStatistics {
     return calculateArray;
   }
 
+  static calculateMatchesAll(hData: IMatchesHome[], aData: IMatchesAway[]): ILeaderboard[] {
+    const hResult = GamesStatistics.calculateMatchesHome(hData);
+    const aResult = GamesStatistics.calculateMatchesAway(aData);
+
+    const combResult: ILeaderboard[] = [];
+
+    for (let i = 0; i < hResult.length; i += 1) {
+      const combEntry: ILeaderboard = { ...hResult[i] };
+
+      combEntry.totalGames += aResult[i].totalGames;
+      combEntry.totalVictories += aResult[i].totalVictories;
+      combEntry.totalDraws += aResult[i].totalDraws;
+      combEntry.totalLosses += aResult[i].totalLosses;
+      combEntry.goalsFavor += aResult[i].goalsFavor;
+      combEntry.goalsOwn += aResult[i].goalsOwn;
+      combEntry.totalPoints += aResult[i].totalPoints;
+      combEntry.goalsBalance += aResult[i].goalsBalance;
+      combEntry.efficiency = Number(((combEntry.totalGames ? combEntry.totalPoints
+        / (combEntry.totalGames * 3) : 0) * 100).toFixed(2));
+
+      combResult.push(combEntry);
+    }
+
+    return combResult;
+  }
+
   static orderClassific(allMatches: ILeaderboard[]): ILeaderboard[] {
     if (!allMatches || allMatches.length === 0) return [];
 

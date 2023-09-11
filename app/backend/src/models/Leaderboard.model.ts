@@ -1,7 +1,7 @@
 import Teams from '../database/models/TeamsSequelize';
 import { ILeaderboardModel } from '../Interfaces/Leaderboards/ILeaderboardModel';
 import Matches from '../database/models/MatchesSequelize';
-import { IMatchesAway, IMatchesHome } from '../Interfaces/Leaderboards/IMatchesTeams';
+import { IMatchesAll, IMatchesAway, IMatchesHome } from '../Interfaces/Leaderboards/IMatchesTeams';
 
 export default class LeaderboardModel implements ILeaderboardModel {
   private teams = Teams;
@@ -19,6 +19,16 @@ export default class LeaderboardModel implements ILeaderboardModel {
     const dbMatches = await this.teams.findAll({
       attributes: ['teamName'],
       include: [
+        { model: Matches, as: 'awayMatch', where: { inProgress: false } },
+      ] });
+    return dbMatches;
+  }
+
+  async getAllTeams(): Promise<IMatchesAll[]> {
+    const dbMatches = await this.teams.findAll({
+      attributes: ['teamName'],
+      include: [
+        { model: Matches, as: 'homeMatch', where: { inProgress: false } },
         { model: Matches, as: 'awayMatch', where: { inProgress: false } },
       ] });
     return dbMatches;

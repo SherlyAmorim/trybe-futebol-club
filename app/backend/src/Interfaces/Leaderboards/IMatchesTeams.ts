@@ -8,3 +8,8 @@ export interface IMatchesHome extends ITeam {
 export interface IMatchesAway extends ITeam {
   awayMatch?: IMatche[],
 }
+
+export interface IMatchesAll extends ITeam {
+  homeMatch?: IMatche[],
+  awayMatch?: IMatche[],
+}

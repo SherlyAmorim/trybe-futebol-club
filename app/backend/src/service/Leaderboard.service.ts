@@ -38,4 +38,24 @@ export default class LeaderboardService {
 
     return { status: 'SUCCESSFUL', data: sortedData };
   }
+
+  public async getAllTeams(): Promise<ServiceResponse<ILeaderboard[]>> {
+    const modelData = await this.leaderboardModel.getAllTeams();
+
+    const teamHomeData: IMatchesHome[] = modelData.map((team) => ({
+      teamName: team.teamName,
+      homeMatch: team.homeMatch ? [...team.homeMatch] : [],
+    }));
+
+    const teamAwayData: IMatchesAway[] = modelData.map((team) => ({
+      teamName: team.teamName,
+      awayMatch: team.awayMatch ? [...team.awayMatch] : [],
+    }));
+
+    const dataFinal = GamesStatistics.calculateMatchesAll(teamHomeData, teamAwayData);
+
+    const sortedData = GamesStatistics.orderClassific(dataFinal);
+
+    return { status: 'SUCCESSFUL', data: sortedData };
+  }
 }
