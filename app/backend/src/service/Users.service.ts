@@ -26,6 +26,7 @@ export default class UsersService {
   public async getRole(email: string)
     : Promise<ServiceResponse<object | null>> {
     const modelData = await this.usersModel.getRole(email);
+    if (!modelData) return { status: 'NOT_FOUND', data: { message: 'User not found' } };
     return { status: 'SUCCESSFUL', data: { role: modelData } };
   }
 }
