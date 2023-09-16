@@ -13,6 +13,8 @@ const invalidLoginBody = { email: 'sherly@admin.com', password: 'secret_admin' }
 const noPasswordLoginBody = { email: 'admin@admin.com' };
 const noEmailLoginBody = { password: 'secret_admin' };
 const role = { role: 'admin'};
+const invalidateEmail = { email: 'admin.com', password: 'secret_admin' };
+const invalidatePassword = { email: 'admin@admin.com', password: 'sec' };
 
 export {
   login,
@@ -22,4 +24,6 @@ export {
   noPasswordLoginBody,
   noEmailLoginBody,
   role,
+  invalidateEmail,
+  invalidatePassword,
 };
