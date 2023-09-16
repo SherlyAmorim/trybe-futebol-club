@@ -6,7 +6,7 @@ import chaiHttp = require('chai-http');
 
 import { App } from '../app';
 import Users from '../database/models/UsersSequelize';
-import { invalidLoginBody, login, noEmailLoginBody, noPasswordLoginBody, rash, role } from './mocks/Users.mocks';
+import { invalidLoginBody, invalidateEmail, invalidatePassword, login, noEmailLoginBody, noPasswordLoginBody, rash, role } from './mocks/Users.mocks';
 import UsersValidations from '../middlewares/UsersValidations';
 import JWT from '../utils/JWT';
 
@@ -94,4 +94,23 @@ describe('Users teste', function() {
     expect(resp.body).to.deep.equal({ message: 'User not found' });
   })
 
+  it('Post Users return UNAUTHORIZED invalid email', async function () {
+    sinon.stub(Users, 'findOne').resolves();
+    sinon.stub(UsersValidations, 'validateLogin').returns();
+    
+    const resp = await await chai.request(app).post('/login').send(invalidateEmail);
+    
+    expect(resp.status).to.equal(401);
+    expect(resp.body).to.deep.equal({ message: 'Invalid email or password' });
+  })
+
+  it('Post Users return UNAUTHORIZED invalid password', async function () {
+    sinon.stub(Users, 'findOne').resolves();
+    sinon.stub(UsersValidations, 'validateLogin').returns();
+    
+    const resp = await await chai.request(app).post('/login').send(invalidatePassword);
+    
+    expect(resp.status).to.equal(401);
+    expect(resp.body).to.deep.equal({ message: 'Invalid email or password' });
+  })
 });
